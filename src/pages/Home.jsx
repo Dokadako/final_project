@@ -10,6 +10,7 @@ function Home() {
         <div className="container mx-auto p-4 ">
             <h1 className="text-2xl font-bold">Products</h1>
             <div className="grid grid-cols-4 gap-6 mt-4">
+                <div></div>
                 {products.map((product) => (
                     <Link
                         key={product.id}
