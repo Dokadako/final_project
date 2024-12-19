@@ -1,25 +1,44 @@
+
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useStore } from "../context/StoreContext";
 
 function Product() {
     const { id } = useParams();
     const { products, addToCart } = useStore();
-    const product = products.find((p) => p.id === parseInt(id));
+    const product = products.find((p) => p.id === id);
 
     if (!product) return <p>Product not found!</p>;
 
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold">{product.name}</h1>
-            <p className="mt-2">{product.description}</p>
-            <p className="mt-2 text-lg">${product.price}</p>
-            <button
-                className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-                onClick={() => addToCart(product)}
-            >
-                Add to Cart
-            </button>
+            <div className="mb-4">
+                <Link to="/" className="text-blue-500 hover:underline">← Back to Products</Link>
+            </div>
+            <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
+                <div className="md:w-1/2 max-w-md h-128 overflow-hidden">
+                    <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+                <div className="md:w-1/2 p-6 flex flex-col justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">{product.title}</h1>
+                        <p className="text-gray-600 mb-4">{product.description}</p>
+                    </div>
+                    <div>
+                        <p className="text-xl font-semibold text-gray-800 mb-4">{product.price}</p>
+                        <button
+                            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded transition duration-300"
+                            onClick={() => addToCart(product)}
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

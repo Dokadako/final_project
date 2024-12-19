@@ -19,11 +19,8 @@ function Home() {
                         <div className="h-full">
                             <JacketCard
                                 image={product.image}
-                                title={product.name}
+                                title={product.title}
                                 price={product.price}
-                                oldPrice={product.oldPrice}
-                                discount={product.discount}
-                                rating={product.rating}
                             />
                         </div>
                     </Link>
