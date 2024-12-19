@@ -16,22 +16,23 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <div className="min-h-screen bg-gray-100">
-                    <Header />
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/product/:id" element={<Product />} />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/wishlist" element={<Wishlist />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/reset-password" element={<PasswordReset />} />
-                    </Routes>
-                </div>
+                    <div className="min-h-screen flex flex-col bg-gray-100">
+                        <Header/>
+                        <Routes>
+                            <Route path="/" element={<Home/>}/>
+                            <Route path="/product/:id" element={<Product/>}/>
+                            <Route path="/cart" element={<Cart/>}/>
+                            <Route path="/wishlist" element={<Wishlist/>}/>
+                            <Route path="/login" element={<Login/>}/>
+                            <Route path="/register" element={<Register/>}/>
+                            <Route path="/profile" element={<Profile/>}/>
+                            <Route path="/reset-password" element={<PasswordReset/>}/>
+                        </Routes>
+                        <Footer/>
+                    </div>
             </Router>
         </AuthProvider>
-    );
+);
 }
 
 export default App;
