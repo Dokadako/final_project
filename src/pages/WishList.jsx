@@ -25,7 +25,7 @@ function Wishlist() {
                             </div>
                             <div className="flex-grow ml-4">
                                 <span className="text-xl font-bold text-gray-800">{item.title}</span>
-                                <p className="text-lg text-gray-600">${item.price}</p>
+                                <p className="text-lg text-gray-600">{item.price}</p>
                             </div>
                             <button
                                 className="bg-red-500 text-white px-4 py-1 rounded"

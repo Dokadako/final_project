@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 
 function Footer() {
     return (
-        <footer className="bg-black text-white w-full p-4 text-center mt-auto">
-            <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                {/* Логотип и краткое описание */}
+        <footer className="bg-black text-white w-full py-2 text-sm mt-auto">
+            <div className="container mx-auto flex flex-wrap justify-between items-center">
                 <div className="mb-4 md:mb-0">
                     <Link to="/" className="flex items-center space-x-2">
                         <img
@@ -14,11 +13,8 @@ function Footer() {
                             className="h-10 w-85"
                         />
                     </Link>
-                    <p className="text-gray-400 mt-2">
-                        Your one-stop shop for all your needs.
-                    </p>
+                    <p className="text-gray-400 mt-1 text-xs">Your one-stop shop for all your needs.</p>
                 </div>
-                {/* Социальные сети */}
                 <div className="flex space-x-4 mt-4 md:mt-0">
                     <a
                         href="https://facebook.com"

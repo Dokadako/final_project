@@ -73,14 +73,14 @@ function Cart() {
                                 </button>
                             </div>
                             <span className="text-xl font-bold text-gray-800">
-                ${formatNumber(parseFloat(item.price) * quantities[index])}
+                {formatNumber(parseFloat(item.price) * quantities[index])}₸
               </span>
                         </li>
                     ))}
                 </ul>
             )}
             <div className="mt-4 text-right font-bold text-xl">
-                Total: ${formatNumber(total)}
+                Total: {formatNumber(total)}₸
             </div>
             <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
                 Proceed to Checkout
