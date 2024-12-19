@@ -1,38 +1,139 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useStore } from '../context/StoreContext';
-import JacketCard from './JacketCard';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useStore } from "../context/StoreContext";
+import JacketCard from "./JacketCard";
 
 function Home() {
     const { products, wishlist, addToWishlist, removeFromWishlist } = useStore();
 
+    // Пагинация
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 8;
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
     const isProductInWishlist = (productId) => {
-        return wishlist.some(item => item.id === productId);
+        return wishlist.some((item) => item.id === productId);
+    };
+
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const getPageNumbers = () => {
+        const pageNumbers = [];
+        const startPage = Math.max(1, currentPage - 4);
+        const endPage = Math.min(totalPages, currentPage + 4);
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i);
+        }
+        return pageNumbers;
+    };
+
+    const handleScrollToProducts = () => {
+        const productsSection = document.getElementById("products-section");
+        productsSection.scrollIntoView({ behavior: "smooth" });
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold">Products</h1>
-            {/* Responsive grid layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-                {products.map((product) => (
-                    <div key={product.id} className="relative bg-white rounded shadow hover:shadow-lg transition-shadow duration-300 mx-auto">
-                        <Link to={`/product/${product.id}`} className="block">
-                            <div className="h-full">
-                                <JacketCard image={product.image} title={product.title} price={product.price} />
-                            </div>
-                        </Link>
-                        <button
-                            className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center ${isProductInWishlist(product.id) ? "bg-red-500" : "bg-gray-200"}`}
-                            onClick={() => {
-                                isProductInWishlist(product.id) ? removeFromWishlist(product.id) : addToWishlist(product);
-                            }}
+        <div className="min-h-screen text-white font-montserrat">
+            {/* Условное отображение секции Hero только на первой странице */}
+            {currentPage === 1 && (
+                <section className="h-screen flex flex-col items-center justify-center wave-background">
+                    <img
+                        src="/images/masculino_logo.svg"
+                        alt="Masculino"
+                        className="w-[1200px] h-auto"
+                    />
+                    <button
+                        onClick={handleScrollToProducts}
+                        className="mt-6 bg-[#aa783d] hover:bg-[#8a5f31] text-white px-8 py-4 rounded-lg font-montserrat text-lg transition-all duration-200 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-2xl"
+                    >
+                        Shop Now
+                    </button>
+                </section>
+            )}
+
+            {/* Products Section without Wave */}
+            <section id="products-section" className="container mx-auto p-4 mt-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+                    {currentProducts.map((product) => (
+                        <div
+                            key={product.id}
+                            className="relative bg-white text-black rounded shadow hover:shadow-lg transition-shadow duration-300"
+                            style={{ width: "305px" }}
                         >
-                            <img src="https://svg.moda/assets/img/icons/like.svg" alt="Like" className="w-4 h-4" />
-                        </button>
-                    </div>
-                ))}
-            </div>
+                            <Link to={`/product/${product.id}`} className="block">
+                                <div className="h-full">
+                                    <JacketCard
+                                        image={product.image}
+                                        title={product.title}
+                                        price={product.price}
+                                    />
+                                </div>
+                            </Link>
+                            <button
+                                className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center ${
+                                    isProductInWishlist(product.id) ? "bg-red-500" : "bg-gray-200"
+                                }`}
+                                onClick={() => {
+                                    isProductInWishlist(product.id)
+                                        ? removeFromWishlist(product.id)
+                                        : addToWishlist(product);
+                                }}
+                            >
+                                <img
+                                    src="https://svg.moda/assets/img/icons/like.svg"
+                                    alt="Like"
+                                    className="w-4 h-4"
+                                />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Пагинация */}
+                <div className="flex justify-center mt-6">
+                    <nav>
+                        <ul className="flex list-style-none">
+                            <li className="mx-1">
+                                <button
+                                    onClick={() => paginate(Math.max(currentPage - 1, 1))}
+                                    className="px-3 py-2 border rounded bg-white hover:bg-gray-200 text-black"
+                                >
+                                    &lt;
+                                </button>
+                            </li>
+                            {getPageNumbers().map((pageNumber) => (
+                                <li
+                                    key={pageNumber}
+                                    className={`mx-1 ${
+                                        currentPage === pageNumber ? "text-[#a97442]" : "text-black"
+                                    }`}
+                                >
+                                    <button
+                                        onClick={() => paginate(pageNumber)}
+                                        className={`px-3 py-2 border rounded ${
+                                            currentPage === pageNumber ? "bg-[#a97442] text-white" : "bg-white hover:bg-gray-200"
+                                        }`}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                </li>
+                            ))}
+                            <li className="mx-1">
+                                <button
+                                    onClick={() => paginate(Math.min(currentPage + 1, totalPages))}
+                                    className="px-3 py-2 border rounded bg-white hover:bg-gray-200 text-black"
+                                >
+                                    &gt;
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
         </div>
     );
 }
