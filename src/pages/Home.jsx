@@ -4,7 +4,11 @@ import { useStore } from "../context/StoreContext";
 import JacketCard from "./JacketCard";
 
 function Home() {
-    const { products } = useStore();
+    const { products, wishlist, addToWishlist, removeFromWishlist } = useStore();
+
+    const isProductInWishlist = (productId) => {
+        return wishlist.some(item => item.id === productId);
+    };
 
     return (
         <div className="container mx-auto p-4 ">
@@ -14,13 +18,19 @@ function Home() {
                     <Link
                         key={product.id}
                         to={`/product/${product.id}`}
-                        className="block bg-white rounded shadow hover:shadow-lg transition-shadow duration-300 w-64"
+                        className="block bg-white rounded shadow hover:shadow-lg transition-shadow duration-300" style={{ width: '305px' }}
                     >
                         <div className="h-full">
                             <JacketCard
                                 image={product.image}
                                 title={product.title}
                                 price={product.price}
+                                isInWishlist={isProductInWishlist(product.id)}
+                                onToggleWishlist={() => {
+                                    isProductInWishlist(product.id)
+                                        ? removeFromWishlist(product.id)
+                                        : addToWishlist(product);
+                                }}
                             />
                         </div>
                     </Link>
