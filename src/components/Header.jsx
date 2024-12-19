@@ -1,67 +1,92 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Header() {
-    // Пример количества товаров в корзине
-    const cartCount = 0; // Замените на динамическое значение, если есть состояние
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const cartCount = 0; // Replace with dynamic state or props if needed
+
+    const categories = ["Electronics", "Clothing", "Home & Kitchen", "Books", "Toys"];
+
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const closeMenu = () => setIsMenuOpen(false);
 
     return (
-        <header className="bg-white shadow-md p-4">
+        <header className="bg-black text-white fixed top-0 left-0 w-full shadow-md p-4 z-50">
             <div className="container mx-auto flex justify-between items-center">
-                {/* Логотип с текстом */}
-                <div className="flex items-center space-x-2">
-                    <Link to="/" className="flex items-center">
+                {/* Left: Categories Menu */}
+                <div className="relative">
+                    <button
+                        onClick={toggleMenu}
+                        className="flex items-center text-gray-300 hover:text-white font-medium"
+                    >
                         <img
-                            src="/images/logo.jpg" // Путь к логотипу
-                            alt="Logo"
-                            className="h-10 w-10"
+                            src="/images/logo1-removebg-preview.png"
+                            alt="Menu"
+                            className="h-10 w-9 mr-2"
                         />
-                        <span className="text-lg font-bold text-gray-800">SHOPPER</span>
-                    </Link>
+                        Categories
+                    </button>
+                    {isMenuOpen && (
+                        <div className="absolute left-0 mt-2 bg-white shadow-lg rounded-lg w-48 z-10">
+                            <ul className="py-2">
+                                {categories.map((category, index) => (
+                                    <li key={index}>
+                                        <Link
+                                            to={`/category/${category.toLowerCase()}`}
+                                            className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                                            onClick={closeMenu}
+                                        >
+                                            {category}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
 
-                {/* Центр: Ссылка Home */}
-                <nav>
-                    <Link
-                        to="/"
-                        className="text-gray-600 text-lg font-medium hover:text-gray-800"
-                    >
-                        Home
-                    </Link>
-                </nav>
+                {/* Center: Logo */}
+                <Link to="/" className="text-center">
+                    <img
+                        src="/images/Marc-removebg-preview.png"
+                        alt="Logo"
+                        className="h-10 w-auto"
+                    />
+                </Link>
 
-                {/* Правая сторона: Корзина, Login, Профиль */}
+                {/* Right: Navigation Links */}
                 <div className="flex items-center space-x-6">
-                    {/* Корзина */}
-                    <Link
-                        to="/cart"
-                        className="relative text-gray-600 hover:text-gray-800"
-                    >
+                    <Link to="/cart" className="relative text-gray-300 hover:text-white">
                         <img
-                            src="/images/cart.svg" // Путь к локальному файлу SVG
+                            src="/images/shopping-cart.png"
                             alt="Cart"
-                            className="w-15 h-10"
+                            className="w-8 h-8"
                         />
-                        {/* Индикатор количества товаров */}
-                        {cartCount >= 0 && (
+                        {cartCount > 0 && (
                             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                 {cartCount}
                             </span>
                         )}
                     </Link>
 
-                    {/* Кнопка Login */}
+                    <Link to="/wishlist" className="text-gray-300 hover:text-white">
+                        <img
+                            src="/images/heart.png"
+                            alt="Wishlist"
+                            className="w-8 h-8"
+                        />
+                    </Link>
+
+
                     <Link
                         to="/register"
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                        className="bg-yellow-700 text-white px-4 py-2 rounded-lg hover:bg-yellow-900 transition"
                     >
                         Login
                     </Link>
-
-                    {/* Кнопка Профиль */}
                     <Link to="/profile" className="flex items-center">
                         <img
-                            src="/images/profile.svg" // Путь к изображению профиля
+                            src="/images/user.png"
                             alt="Profile"
                             className="h-8 w-8"
                         />

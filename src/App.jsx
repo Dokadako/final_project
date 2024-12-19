@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import PasswordReset from './PasswordReset';
 import Wishlist from "./pages/WishList";
+import Footer from "./components/Footer";
 
 function App() {
     return (
