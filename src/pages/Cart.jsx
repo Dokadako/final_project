@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useStore } from "../context/StoreContext";
+import {Link} from "react-router-dom";
 
 function Cart() {
     const { cart, setCart } = useStore();
@@ -37,6 +38,7 @@ function Cart() {
             ) : (
                 <ul className="mt-4 space-y-4">
                     {cart.map((item, index) => (
+                        <Link to={`/product/${item.id}`} className="block">
                         <li
                             key={index}
                             className="flex justify-between items-center bg-white p-4 rounded shadow"
@@ -76,13 +78,14 @@ function Cart() {
                 {formatNumber(parseFloat(item.price) * quantities[index])}₸
               </span>
                         </li>
+                        </Link>
                     ))}
                 </ul>
             )}
             <div className="mt-4 text-right font-bold text-xl">
                 Total: {formatNumber(total)}₸
             </div>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+            <button className="bg-[#aa783d] text-white px-4 py-2 rounded mt-4">
                 Proceed to Checkout
             </button>
         </div>

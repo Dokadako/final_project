@@ -4,10 +4,20 @@ import { useStore } from "../context/StoreContext";
 
 function Product() {
     const { id } = useParams();
-    const { products, addToCart, wishlist, addToWishlist, removeFromWishlist } = useStore();
+    const { products, cart, setCart, wishlist, addToWishlist, removeFromWishlist } = useStore();
+
     const product = products.find((p) => p.id === id);
 
     const isInWishlist = wishlist.some(item => item.id === id);
+    const isInCart = cart.some(item => item.id === id);
+
+    const handleCartToggle = () => {
+        if (isInCart) {
+            setCart((prev) => prev.filter((item) => item.id !== id));
+        } else {
+            setCart((prev) => [...prev, product]);
+        }
+    };
 
     if (!product) return <p>Product not found!</p>;
 
@@ -28,19 +38,15 @@ function Product() {
                     <div className="flex space-x-4">
                         <p className="text-xl font-semibold text-gray-800 mb-4">{product.price}</p>
                         <button
-                            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded transition duration-300"
-                            onClick={() => addToCart(product)}
+                            className={`bg-${isInCart ? 'red' : 'green'}-500 hover:bg-${isInCart ? 'red' : 'green'}-600 text-white px-6 py-3 rounded transition duration-300`}
+                            onClick={handleCartToggle}
                         >
-                            Add to Cart
+                            {isInCart ? 'Remove from Cart' : 'Add to Cart'}
                         </button>
                         <button
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                isInWishlist ? "bg-red-500" : "bg-gray-200"
-                            }`}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${isInWishlist ? "bg-red-500" : "bg-gray-200"}`}
                             onClick={() => {
-                                isInWishlist
-                                    ? removeFromWishlist(product.id)
-                                    : addToWishlist(product);
+                                isInWishlist ? removeFromWishlist(product.id) : addToWishlist(product);
                             }}
                         >
                             <img src="https://svg.moda/assets/img/icons/like.svg" alt="Like" className="w-4 h-4" />

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function AuthPage() {
@@ -8,10 +7,8 @@ function AuthPage() {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
     const [formData, setFormData] = useState({ email: "", password: "" });
+    const navigate = useNavigate();
 
-    const navigate = useNavigate(); // Для перенаправления
-
-    // Google Login
     const loginWithGoogle = useGoogleLogin({
         onSuccess: (codeResponse) => {
             setUser(codeResponse);
@@ -22,17 +19,25 @@ function AuthPage() {
 
     useEffect(() => {
         if (user?.access_token) {
-            axios
-                .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+            fetch(
+                `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+                {
                     headers: {
                         Authorization: `Bearer ${user.access_token}`,
                         Accept: "application/json",
                     },
+                }
+            )
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
                 })
-                .then((res) => {
-                    setProfile(res.data);
-                    localStorage.setItem("profile", JSON.stringify(res.data));
-                    navigate("/profile"); // Перенаправление на профиль
+                .then((data) => {
+                    setProfile(data);
+                    localStorage.setItem("profile", JSON.stringify(data));
+                    navigate("/profile");
                 })
                 .catch((err) => console.log("Error fetching user data:", err));
         }
@@ -50,70 +55,78 @@ function AuthPage() {
         e.preventDefault();
         if (tab === "register") {
             console.log("Registering user:", formData);
-            // После успешной регистрации или входа перенаправить:
             navigate("/profile");
         } else {
             console.log("Logging in user:", formData);
-            // После успешного входа перенаправить:
             navigate("/profile");
         }
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-            <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
-                <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
-                    Authentication
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-700 to-black">
+            <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
+                <h2 className="text-3xl font-bold text-gray-700 text-center mb-8">
+                    Welcome Back!
                 </h2>
-                {/* Вкладки */}
                 <div className="flex justify-around mb-6">
                     <button
-                        className={`px-4 py-2 font-medium ${tab === "login" ? "text-blue-500" : "text-gray-500"}`}
+                        className={`px-4 py-2 rounded-lg font-semibold transition duration-300 ${
+                            tab === "login"
+                                ? "bg-[#aa783d] text-white"
+                                : "bg-gray-200 text-gray-600"
+                        }`}
                         onClick={() => setTab("login")}
                     >
                         Login
                     </button>
                     <button
-                        className={`px-4 py-2 font-medium ${tab === "register" ? "text-blue-500" : "text-gray-500"}`}
+                        className={`px-4 py-2 rounded-lg font-semibold transition duration-300 ${
+                            tab === "register"
+                                ? "bg-[#aa783d] text-white"
+                                : "bg-gray-200 text-gray-600"
+                        }`}
                         onClick={() => setTab("register")}
                     >
                         Register
                     </button>
                 </div>
-
-                {/* Форма */}
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <label className="block text-sm font-medium text-gray-600">
+                            Email
+                        </label>
                         <input
                             type="email"
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, email: e.target.value })
+                            }
                             required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:border-indigo-600"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <label className="block text-sm font-medium text-gray-600">
+                            Password
+                        </label>
                         <input
                             type="password"
                             value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            onChange={(e) =>
+                                setFormData({ ...formData, password: e.target.value })
+                            }
                             required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:border-indigo-600"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+                        className="w-full bg-black hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
                     >
                         {tab === "login" ? "Login" : "Register"}
                     </button>
                 </form>
-
                 <div className="text-center my-4 text-gray-500">OR</div>
-
-                {/* Google Sign-In */}
                 {profile ? (
                     <div className="text-center">
                         <img
@@ -121,10 +134,10 @@ function AuthPage() {
                             src={profile.picture}
                             alt="User"
                         />
-                        <p className="text-sm">Welcome, {profile.name}</p>
+                        <p className="text-sm text-gray-700">Welcome, {profile.name}</p>
                         <button
                             onClick={logOut}
-                            className="mt-4 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+                            className="mt-4 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
                         >
                             Log out
                         </button>
@@ -132,7 +145,7 @@ function AuthPage() {
                 ) : (
                     <button
                         onClick={loginWithGoogle}
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+                        className="w-full bg-black hover:bg-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
                     >
                         Sign in with Google 🚀
                     </button>
