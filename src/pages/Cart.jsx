@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useStore } from "../context/StoreContext";
 import { Link } from "react-router-dom";
+import { API_URL } from "../API";
 
 function Cart() {
     const { cart, setCart } = useStore();
@@ -15,7 +16,6 @@ function Cart() {
     };
 
     const handleRemoveItem = (index) => {
-        // Удаляем элемент из корзины и обновляем состояние
         setCart((prev) => prev.filter((_, i) => i !== index));
         setQuantities((prev) => prev.filter((_, i) => i !== index));
     };
@@ -44,14 +44,20 @@ function Cart() {
                             <Link to={`/product/${item.id}`} className="block">
                                 <div className="w-24 h-24 overflow-hidden rounded mx-auto sm:mx-0">
                                     <img
-                                        src={item.image}
+                                        src={
+                                            item.imageUrls.length
+                                                ? `${API_URL}/files/${item.imageUrls[0]}`
+                                                : null
+                                        }
                                         alt={item.title}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
                             </Link>
                             <div className="flex-grow mt-4 sm:mt-0 sm:ml-4">
-                                <span className="text-xl font-bold text-gray-800">{item.title}</span>
+                <span className="text-xl font-bold text-gray-800">
+                  {item.name}
+                </span>
                                 <div className="flex items-center mt-2">
                   <span className="text-gray-800 mr-4">
                     {formatNumber(parseFloat(item.price))} ₸/unit
@@ -87,9 +93,12 @@ function Cart() {
             <div className="mt-4 text-right font-bold text-xl">
                 Total: {formatNumber(total)}₸
             </div>
-            <button className="bg-[#aa783d] text-white px-4 py-2 rounded mt-4">
+            <Link
+                className="bg-[#aa783d] text-white px-4 py-2 rounded mt-4"
+                to="/checkout"
+            >
                 Proceed to Checkout
-            </button>
+            </Link>
         </div>
     );
 }

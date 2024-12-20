@@ -40,10 +40,10 @@ function Header() {
                              className="w-6 h-6 transition-transform duration-300 hover:scale-125"/>
                     </Link>
                 </div>
-        </div>
-</header>
-)
-    ;
+            </div>
+        </header>
+    )
+        ;
 }
 
 export default Header;

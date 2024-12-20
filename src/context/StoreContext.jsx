@@ -1,35 +1,37 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-import {v4 as uuidv4} from "uuid";
 
 const StoreContext = createContext();
+
 export const useStore = () => useContext(StoreContext);
 
 export const StoreProvider = ({ children }) => {
-    const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
-    const [wishlist, setWishlist] = useState([]);  // Новое состояние для wishlist
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [cart, setCart] = useState(() => {
+        try {
+            const storedCart = localStorage.getItem("cart");
+            return storedCart ? JSON.parse(storedCart) : [];
+        } catch (error) {
+            console.error("Failed to parse cart from localStorage", error);
+            return [];
+        }
+    });
+
+    const [wishlist, setWishlist] = useState(() => {
+        try {
+            const storedWishlist = localStorage.getItem("wishlist");
+            return storedWishlist ? JSON.parse(storedWishlist) : [];
+        } catch (error) {
+            console.error("Failed to parse wishlist from localStorage", error);
+            return [];
+        }
+    });
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/products');
-                const productsWithId = response.data.map(product => ({
-                    ...product,
-                    id: uuidv4()  // Генерируем уникальный идентификатор для каждого продукта
-                }));
-                setProducts(productsWithId);
-                setLoading(false);
-            } catch (err) {
-                setError(err.message);
-                setLoading(false);
-            }
-        };
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }, [cart]);
 
-        fetchProducts();
-    }, []);
+    useEffect(() => {
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    }, [wishlist]);
 
     const addToCart = (product) => {
         setCart((prev) => [...prev, product]);
@@ -40,14 +42,20 @@ export const StoreProvider = ({ children }) => {
     };
 
     const removeFromWishlist = (productId) => {
-        setWishlist((prev) => prev.filter(item => item.id !== productId));
+        setWishlist((prev) => prev.filter((item) => item.id !== productId));
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
-
     return (
-        <StoreContext.Provider value={{ products, cart, setCart, addToCart, wishlist, addToWishlist, removeFromWishlist }}>
+        <StoreContext.Provider
+            value={{
+                cart,
+                setCart,
+                addToCart,
+                wishlist,
+                addToWishlist,
+                removeFromWishlist,
+            }}
+        >
             {children}
         </StoreContext.Provider>
     );
