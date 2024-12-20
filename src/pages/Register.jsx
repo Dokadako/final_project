@@ -63,7 +63,8 @@ function AuthPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-yellow-700 to-black">
+        <div className="bg-yellow-700">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-black via-transparent to-black">
             <div className="bg-white shadow-lg rounded-lg p-8 max-w-sm w-full">
                 <h2 className="text-3xl font-bold text-gray-700 text-center mb-8">
                     Welcome Back!
@@ -92,7 +93,7 @@ function AuthPage() {
                 </div>
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-600">
+                        <label className="block text-sm font-medium text-black">
                             Email
                         </label>
                         <input
@@ -102,11 +103,11 @@ function AuthPage() {
                                 setFormData({ ...formData, email: e.target.value })
                             }
                             required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:border-indigo-600"
+                            className="w-full border focus:outline-none border-black focus:ring focus:ring-yellow-700 rounded-lg px-3 py-2 mt-1"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-600">
+                        <label className="block text-sm font-medium text-black">
                             Password
                         </label>
                         <input
@@ -116,7 +117,7 @@ function AuthPage() {
                                 setFormData({ ...formData, password: e.target.value })
                             }
                             required
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:outline-none focus:border-indigo-600"
+                            className="w-full border focus:outline-none border-black focus:ring focus:ring-yellow-700 rounded-lg px-3 py-2 mt-1"
                         />
                     </div>
                     <button
@@ -151,6 +152,7 @@ function AuthPage() {
                     </button>
                 )}
             </div>
+        </div>
         </div>
     );
 }
