@@ -1,5 +1,6 @@
 import React from "react";
 import { useStore } from "../context/StoreContext";
+import {Link} from "react-router-dom";
 
 function Wishlist() {
     const { wishlist, removeFromWishlist } = useStore();
@@ -16,6 +17,8 @@ function Wishlist() {
                             key={index}
                             className="flex justify-between items-center bg-white p-4 rounded shadow"
                         >
+
+                            <Link to={`/product/${item.id}`} className="block">
                             <div className="w-24 h-24 overflow-hidden rounded">
                                 <img
                                     src={item.image}
@@ -23,6 +26,7 @@ function Wishlist() {
                                     className="w-full h-full object-cover"
                                 />
                             </div>
+                            </Link>
                             <div className="flex-grow ml-4">
                                 <span className="text-xl font-bold text-gray-800">{item.title}</span>
                                 <p className="text-lg text-gray-600">{item.price}</p>

@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { useStore } from "../context/StoreContext";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Cart() {
     const { cart, setCart } = useStore();
@@ -38,21 +37,25 @@ function Cart() {
             ) : (
                 <ul className="mt-4 space-y-4">
                     {cart.map((item, index) => (
-                        <Link to={`/product/${item.id}`} className="block">
                         <li
                             key={index}
-                            className="flex justify-between items-center bg-white p-4 rounded shadow"
+                            className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded shadow"
                         >
-                            <div className="w-24 h-24 overflow-hidden rounded">
-                                <img
-                                    src={item.image}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div className="flex-grow ml-4">
+                            <Link to={`/product/${item.id}`} className="block">
+                                <div className="w-24 h-24 overflow-hidden rounded mx-auto sm:mx-0">
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </Link>
+                            <div className="flex-grow mt-4 sm:mt-0 sm:ml-4">
                                 <span className="text-xl font-bold text-gray-800">{item.title}</span>
                                 <div className="flex items-center mt-2">
+                  <span className="text-gray-800 mr-4">
+                    {formatNumber(parseFloat(item.price))} ₸/unit
+                  </span>
                                     <button
                                         className="bg-gray-200 px-2 py-1 rounded"
                                         onClick={() => handleQuantityChange(index, -1)}
@@ -74,11 +77,10 @@ function Cart() {
                                     Remove
                                 </button>
                             </div>
-                            <span className="text-xl font-bold text-gray-800">
+                            <span className="text-xl font-bold text-gray-800 mt-4 sm:mt-0 sm:ml-4">
                 {formatNumber(parseFloat(item.price) * quantities[index])}₸
               </span>
                         </li>
-                        </Link>
                     ))}
                 </ul>
             )}

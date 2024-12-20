@@ -1,13 +1,13 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useStore } from "../context/StoreContext";
 
 function Product() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { products, cart, setCart, wishlist, addToWishlist, removeFromWishlist } = useStore();
 
     const product = products.find((p) => p.id === id);
-
     const isInWishlist = wishlist.some(item => item.id === id);
     const isInCart = cart.some(item => item.id === id);
 
@@ -24,7 +24,9 @@ function Product() {
     return (
         <div className="container mx-auto p-4">
             <div className="mb-4">
-                <Link to="/" className="text-blue-500 hover:underline">← Back to Products</Link>
+                <button onClick={() => navigate(-1)} className="flex items-center">
+                    <img src="/images/back-button.png" alt="back" className="h-10 transition-all duration-500 hover:scale-105" />
+                </button>
             </div>
             <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="md:w-1/2 max-w-md h-128 overflow-hidden">
